@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRIBE v2 - Análise de Engajamento Neural</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>TRIBE v2 · Engajamento Neural de Vídeo</h1>
+    <p class="subtitle">
+      Prediz a resposta cortical (fMRI) do espectador médio ao seu vídeo, usando o modelo
+      <a href="https://github.com/facebookresearch/tribev2" target="_blank" rel="noopener">TRIBE v2</a>
+      do Meta FAIR. Score = magnitude L2 da ativação cortical predita.
+    </p>
+  </header>
+
+  <main>
+    <section class="upload-card">
+      <label for="api-url">URL do backend (ex.: ngrok do Colab)</label>
+      <input type="text" id="api-url" placeholder="https://xxxx.ngrok-free.app" />
+
+      <label for="file-input" class="file-label">
+        <span id="file-label-text">Escolher vídeo (.mp4, .mov, .webm)</span>
+        <input type="file" id="file-input" accept="video/*" hidden />
+      </label>
+
+      <button id="analyze-btn" disabled>Analisar</button>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="results" class="results hidden">
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Score de engajamento</div>
+          <div class="metric-value" id="score">—</div>
+          <div class="metric-sub">0–100</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Duração analisada</div>
+          <div class="metric-value" id="duration">—</div>
+          <div class="metric-sub">segundos</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Vértices corticais</div>
+          <div class="metric-value" id="vertices">—</div>
+          <div class="metric-sub">fsaverage5</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Curva temporal de engajamento</h3>
+        <canvas id="curve"></canvas>
+      </div>
+
+      <div class="peaks-card">
+        <h3>Picos de ativação (top 5 segundos)</h3>
+        <ul id="peaks"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Modelo licenciado sob CC-BY-NC-4.0 · Uso não comercial
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
