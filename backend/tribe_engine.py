@@ -26,6 +26,7 @@ class TribeEngine:
     REFERENCE_SCALE = 8.0
 
     def __init__(self, cache_folder: str = "./cache"):
+        self._ensure_tribev2_importable()
         from tribev2.demo_utils import TribeModel
 
         self.cache_folder = Path(cache_folder)
@@ -33,6 +34,26 @@ class TribeEngine:
         self.model = TribeModel.from_pretrained(
             "facebook/tribev2", cache_folder=self.cache_folder
         )
+
+    @staticmethod
+    def _ensure_tribev2_importable() -> None:
+        import sys
+
+        try:
+            import tribev2.demo_utils  # noqa: F401
+            return
+        except ModuleNotFoundError:
+            pass
+
+        candidates = [
+            "/content/tribev2",
+            str(Path(__file__).resolve().parent.parent.parent / "tribev2"),
+        ]
+        for path in candidates:
+            if (Path(path) / "tribev2" / "demo_utils.py").exists():
+                if path not in sys.path:
+                    sys.path.insert(0, path)
+                return
 
     def analyze(self, video_path: str | Path) -> EngagementResult:
         df = self.model.get_events_dataframe(video_path=str(video_path))
